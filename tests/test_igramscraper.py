@@ -8,7 +8,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from igramscraper.instagram import Instagram
 from igramscraper.model import Media
 
+COMMENT_ID = None # For add_comment and delete_comment methods. Gotten comment id by add_comment output
+                  # passes as parameter to delete_comment function
+
 class TestIgramscraper(unittest.TestCase):
+    
 
     @classmethod
     def setUpClass(self):
@@ -25,11 +29,13 @@ class TestIgramscraper(unittest.TestCase):
         if user_agent != None:
             #TODO set user agent
             pass
+        
+        
 
     @classmethod
     def tearDownClass(self):
         pass
-
+    
     def test_get_account_by_username(self):
         account = self.instagram.get_account('kevin')
         self.assertEqual('kevin', account.username)
@@ -104,11 +110,39 @@ class TestIgramscraper(unittest.TestCase):
     def test_get_medias_by_user_id(self):
         medias = self.instagram.get_medias_by_user_id(3)
         self.assertEqual(12, len(medias))
-    
+
     # TODO add like test
+    def test_like(self):
+        try:
+            self.instagram.like('2146725632519197791')
+        except Exception as e:
+            #TODO check error type
+            print(e)
+    
     # TODO add unlike test
+    def test_unlike(self):
+        try:
+            self.instagram.unlike('2146725632519197791')
+        except Exception as e:
+            #TODO check error type
+            print(e)
+
     # TODO add comment and uncomment test
+    def test_add_comment(self):
+        global COMMENT_ID
+        comment = self.instagram.add_comment('2146725632519197791', 'Awesome!')
+        COMMENT_ID = comment.identifier
+
     # TODO add follow unfollow test
+    def test_delete_comment(self):
+        global COMMENT_ID
+        try:
+            self.instagram.delete_comment('2146725632519197791', COMMENT_ID)
+        except Exception as e:
+            #TODO check error type
+            print(e)
+    
+
     # TODO: Add test get_media_by_id
     # TODO: Add test get_location_by_id
 
